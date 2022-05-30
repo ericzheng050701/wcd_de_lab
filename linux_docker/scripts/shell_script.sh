@@ -18,11 +18,11 @@ filenametime1=$(date +"%m%d%Y%H%M%S")
 filenametime2=$(date +"%Y-%m-%d %H:%M:%S")
 #########################################################
 # Part 2: SET VARIABLES 
-export BASE_FOLDER='/home/ezheng/curriculum/linux_docker/'
-export SCRIPTS_FOLDER='/home/ezheng/curriculum/linux_docker/scripts'
-export INPUT_FOLDER='/home/ezheng/curriculum/linux_docker/input'
-export OUT_FOLDER='/home/ezheng/curriculum/linux_docker/input'
-export LOGDIR='/home/ezheng/curriculum/linux_docker/logs'
+export BASE_FOLDER='/your/direct/folder/path/mainfloder'
+export SCRIPTS_FOLDER='/your/direct/folder/path/of/scripts'
+export INPUT_FOLDER='/your/direct/folder/path/of/output'
+export OUT_FOLDER='/your/direct/folder/path/of/output'
+export LOGDIR='/your/direct/folder/path/of/logs'
 export SHELL_SCRIPT_NAME='shell_script'
 export LOG_FILE=${LOGDIR}/${SHELL_SCRIPT_NAME}_${filenametime1}.log
 #########################################################
