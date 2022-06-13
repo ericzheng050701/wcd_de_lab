@@ -67,4 +67,3 @@ fi
 echo "PROGRAM SUCCEEDED"
 
 exit 0 
-## Must have, to indicate exiting the program
