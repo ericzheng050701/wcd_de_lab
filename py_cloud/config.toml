@@ -4,3 +4,6 @@ url='https://www.themuse.com/api/public/jobs?page=50'
 [aws]
 bucket='de-exercise-data-bucket'
 folder='input/'
+
+[run]
+py_script="run_v1.py"

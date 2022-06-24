@@ -16,7 +16,8 @@ filenametime2=$(date +"%Y-%m-%d %H:%M:%S")
 #########################################################
 # Part 2: SET VARIABLES 
 
-export PYTHON_SCRIPT_NAME=run_v1.py
+
+export PYTHON_SCRIPT_NAME=$(cat config.toml | grep 'py_script' | awk -F"=" '{print $2}' | tr -d '"') # get the py_script from config.toml, and remove the quotes
 export SCRIPTS_FOLDER=$(pwd)
 export LOGDIR=$SCRIPTS_FOLDER/log
 export LOG_FILE=${LOGDIR}/${SHELL_SCRIPT_NAME}_${filenametime1}.log
