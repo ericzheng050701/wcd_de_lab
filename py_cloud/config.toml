@@ -1,0 +1,6 @@
+[api]
+url='https://www.themuse.com/api/public/jobs?page=50'
+
+[aws]
+bucket='de-exercise-data-bucket'
+folder='input/'
