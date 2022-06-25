@@ -32,6 +32,8 @@ exec > >(tee ${LOG_FILE}) 2>&1
 
 #########################################################
 # PART 5: RUN SCRIPT
+source sandbox/bin/activate
+
 echo "Start to run Python Script"
 python3 ${SCRIPTS_FOLDER}/${PYTHON_SCRIPT_NAME}
 
@@ -45,5 +47,7 @@ if [ ${RC1} != 0 ]; then
 fi
 
 echo "PROGRAM SUCCEEDED"
+
+deactivate
 
 exit 0 

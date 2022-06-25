@@ -1,5 +1,16 @@
-# Create a virtual environment
-python3 -m venv sandbox  
+#!/bin/bash
+
+# install specific python version to make sure all the work env for various server are the same.
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt-get update
+sudo apt install python3.8 -y
+sudo apt install python3.8-distutils -y
+
+# install awscli
+sudo apt  install awscli -y
+
+# Create a virtual environment for specific python3.8 version
+virtualenv --python="/usr/bin/python3.8" sandbox  
 source sandbox/bin/activate 
 
 # Install dependencies

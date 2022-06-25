@@ -6,4 +6,4 @@ bucket='de-exercise-data-bucket'
 folder='input/'
 
 [run]
-py_script="run_v1.py"
+py_script="run_v2.py"
