@@ -1,0 +1,7 @@
+
+[aws]
+bucket='de-exercise-data-bucket'
+folder='input/'
+
+[run]
+py_script="run.py"
