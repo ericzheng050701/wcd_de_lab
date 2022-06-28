@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from datetime import date
 import os
 import toml 
+import subprocess
 
 
 def mysql_connect(host, user, password, database, port,schema):
@@ -57,16 +58,22 @@ if __name__=="__main__":
     database=app_config['db']['database']
     schema=app_config['db']['schema']
 
+    bucket=app_config['s3']['bucket']
+    folder=app_config['s3']['folder']
+
     load_dotenv()
     user=os.getenv('user')
     password=os.getenv('password')
 
-    cusid_file='../data/cus_id.json'
+    # read customer_id_file to local
+    subprocess.call(['aws','s3','cp',f's3://{bucket}/{folder}/cus_id.json','cus_id.json'])
+    customer_id_file='cus_id.json'
+    
     # build the connection to the database
     engine = mysql_connect(host, user, password, database, port,schema)
     
     # get the customer id and insert it into the sql statement
-    ids = get_customer_id(cusid_file)
+    ids = get_customer_id(customer_id_file)
 
     sql=f"""select customerID, CustomerName
             from customers
