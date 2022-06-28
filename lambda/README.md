@@ -1,11 +1,10 @@
-1. set all secrets in .env
-2. set all config in config.toml
-3. run **init.sh** to create a virtual environment
-4. the python script enbeded in **run.sh**, and use **run.sh**  to control job
-5. there are two versions of python script:
-    - run_v1.py: A regular version using boto3 and aws secrets, the version can be used in any platform any condition.
-    - run_v2.py: This is a version for srcipts running on AWS EC2. Because we grand the EC2 a role to access the S3, so no secrets and boto3 required. 
+1. use "init.sh" to run the program
+2. "run.py" is the script to do main work
+3. files under "lambda_script" is the files will be used in AWS lambda
+4. 'lambda_function.py' is the script used to run lambda function
+5. under 'my-lambda-script' aws-layer is the folder used to create lambda layer
+6. under 'my-lambda-script', mklayer.sh is the steps to create a layer
+7. under 'my-lambda-script', requirements.txt is the libaries used for the layer.
+8. Be aware of all the .env files are missing from the repo, please create and use it for secrets. 
 
-## Instruction
-- The run script most copy the template from the linux lab
-- some parameter need for run.sh also come from config.toml
+
