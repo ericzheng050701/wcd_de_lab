@@ -51,6 +51,7 @@ def get_customer_data_pandas(engine, sql):
 
 if __name__=="__main__": 
     app_config = toml.load('config.toml')
+    
     api_url = app_config['api']['api_url']
     
     host=app_config['db']['host']
@@ -68,7 +69,7 @@ if __name__=="__main__":
     # read customer_id_file to local
     subprocess.call(['aws','s3','cp',f's3://{bucket}/{folder}/cus_id.json','cus_id.json'])
     customer_id_file='cus_id.json'
-    
+
     # build the connection to the database
     engine = mysql_connect(host, user, password, database, port,schema)
     

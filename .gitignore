@@ -1,3 +1,6 @@
 git_token
 ./lambda/sandbox
 ./lambda/lambda_script/.env
+/home/ubuntu/demo/wcd_de_lab/lambda/.env
+/home/ubuntu/demo/wcd_de_lab/lambda/sanbox
+
