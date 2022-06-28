@@ -22,3 +22,4 @@ deactivate # deactivate your sandbox
 chmod a+x run.sh # make run.sh executable
 
 mkdir -p log # create log directory if it doesn't exist
+mkdir -p data # create data directory if it doesn't exist
