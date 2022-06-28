@@ -1,1 +1,3 @@
 git_token
+./lambda/sandbox
+./lambda/lambda_script/.env
