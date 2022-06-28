@@ -10,6 +10,7 @@ sudo apt install python3.8-distutils -y
 sudo apt  install awscli -y
 
 # Create a virtual environment for specific python3.8 version
+sudo apt install python3-virtualenv -y
 virtualenv --python="/usr/bin/python3.8" sandbox  
 source sandbox/bin/activate 
 
