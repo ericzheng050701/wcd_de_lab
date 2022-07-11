@@ -1,4 +1,4 @@
-# 2. Business Requirements 
+# Business Requirements 
 **Each week**, **on store level**, calculate the following metrics for **each product**:
 - **total sales quantity of a product** : Sum(sales_qty)
 - **total sales amount of a product** : Sum(sales_amt)
