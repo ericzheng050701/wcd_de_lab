@@ -1,7 +1,7 @@
-USE SCHEMA walmart_dev.walsup;
+USE Database walmart_dev;
 
 
-TRUNCATE TABLE sales_inv_store_dy;
+TRUNCATE TABLE walsup.sales_inv_store_dy;
 INSERT INTO walsup.sales_inv_store_dy 
 (
 	CAL_DT,
