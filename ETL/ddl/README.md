@@ -1,0 +1,1 @@
+ddl for all schemas
