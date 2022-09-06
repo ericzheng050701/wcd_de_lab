@@ -39,7 +39,7 @@ for m in range(1,13):
 if __name__ == "__main__":
 	# parse arguments
     parser = argparse.ArgumentParser()
-    parser.add_argument('--output_path', help="The URI for you CSV output data, like an S3 bucket location.")
+    parser.add_argument('--output_path', help="The URI for you parquet output data, like an S3 bucket location.")
     args = parser.parse_args()
 
     output_path = args.output_path
