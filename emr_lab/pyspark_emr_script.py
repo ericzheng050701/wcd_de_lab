@@ -48,6 +48,8 @@ if __name__ == "__main__":
 	df=read_csv(path)
 	df=df.fillna(value=0)
 	df=df.na.fill("None")
+	# Standard the columns name, trim space
+	df=df.withColumnRenamed("Trip_type ", "Trip_type")
 
 	# 1) Printout the result of total number of the passengers
 	total_num_rows=df.count()
@@ -92,11 +94,13 @@ if __name__ == "__main__":
 
 	df=read_csv(path)
 	df=df.fillna(value=0)
-	df.show(3)
+	# Standard the columns name, trim space
+	df=df.withColumnRenamed("Trip_type ", "Trip_type")
+	
 
 	# Add new columns "weeknum" and "Generous_customer_flg"
 	df_new = df.withColumn("weeknum", weekofyear(col("lpep_pickup_datetime"))).withColumn("Generous_customer_flg", col("Tip_amount")>df.select(avg(col("Tip_amount"))).collect()[0][0])
-	df_group=df_new.groupBy("weeknum","VendorID", "Trip_type ", "payment_type")
+	df_group=df_new.groupBy("weeknum","VendorID", "Trip_type", "payment_type")
 	df_week=df_group.agg(sum("Trip_distance").alias("Total_trip_distance"),\
                  avg("Trip_distance").alias("Avg_trip_distance"),\
                  sum("Fare_amount").alias("Total_Fare_amount"),\
