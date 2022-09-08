@@ -1,0 +1,7 @@
+{"year": 2017,
+"last_n_years": 3,
+"start_date": "2017-01-04",
+"end_date": "2017-07-05"
+"s3_bucket": "s3://my-bucket",
+"s3_key": "exercise1/files"
+}
