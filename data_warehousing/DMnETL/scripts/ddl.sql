@@ -61,7 +61,7 @@ replace_cost	NUMERIC,
 rating	varchar(100),
 special_features	varchar(100),
 actor_first_name	varchar(45),
-actor_second_name	varchar(45),
+actor_last_name	varchar(45),
 category_name	varchar(45));
 
 CREATE OR REPLACE TABLE sakila_anl.calendar_dim (
