@@ -45,8 +45,7 @@ district	varchar(20),
 city_name	varchar(50),
 postal_code	varchar(10),
 phone	varchar(20),
-country_name	varchar(50),
-active	boolean);
+country_name	varchar(50));
 
 CREATE OR REPLACE TABLE sakila_anl.film_dim (
 film_id	int,
