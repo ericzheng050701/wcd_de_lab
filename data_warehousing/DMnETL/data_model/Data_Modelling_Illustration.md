@@ -44,8 +44,8 @@ The gain of dimensions are: customer on customer_id level, store on store_id lev
 - The fact table is created by joining the original tables payment + rental + inventory. 
 
 - The measures are:
- - amount (from the payment table)
- - is_decline flag (from ETL calculation)
+   - amount (from the payment table)
+   - is_decline flag (from ETL calculation)
 
 
 
