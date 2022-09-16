@@ -22,19 +22,19 @@ From the above requirements, we used customer_id, film_id, store_id, staff_id th
 The gain of dimensions are: customer on customer_id level, store on store_id level, staff on staff_id level, calendar on day level. 
 
 - Customer dimension
-The new customer dimension needs to be joined by the original customer, address, city, country tables.
+ > The new customer dimension needs to be joined by the original customer, address, city, country tables.
 
 - Film dimension
-The new film dimension needs to be joined by the original film, film_actor, actor, category, film_category , language tables. In this project, we joined the language table although it was not used in the current requirements. The reason for this is because we need to prepare for the future possible requirements. 
+ > The new film dimension needs to be joined by the original film, film_actor, actor, category, film_category , language tables. In this project, we joined the language table although it was not used in the current requirements. The reason for this is because we need to prepare for the future possible requirements. 
 
 - Store dimension
-The new store dimension needs to be joined by the original store, staff, address, city, country tables.
+ > The new store dimension needs to be joined by the original store, staff, address, city, country tables.
 
 - Staff dimension
-The new staff dimension needs to be joined by the staff address, city, country tables.
+ > The new staff dimension needs to be joined by the staff address, city, country tables.
 
 - Calendar dimension
-Used for the time dimension include day/week/month/year. It will be populated only once and used all the time. 
+ > Used for the time dimension include day/week/month/year. It will be populated only once and used all the time. 
 
 
 # 3 Fact table
