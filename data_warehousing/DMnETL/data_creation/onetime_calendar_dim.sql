@@ -1,7 +1,7 @@
 USE DATABASE xxxxx;
 USE SCHEMA XXXX;
 
-CREATE OR REPLACE TABLE calendar (
+CREATE OR REPLACE TABLE calendar_dim (
 cal_dt	date,
 day_of_wk_num 	int,
 day_of_wk_desc	varchar(30),
