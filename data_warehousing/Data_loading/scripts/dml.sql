@@ -300,7 +300,6 @@ FROM walmart.inventory
 WHERE cal_dt>=NVL($LAST_DATE, '1900-01-01');
 
 
-TRUNCATE TABLE walmart_anl.sales_inv_store_dy;
 INSERT INTO walmart_anl.sales_inv_store_dy 
 (
 	cal_dt,
