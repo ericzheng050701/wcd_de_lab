@@ -4,52 +4,17 @@ USE DATABASE wcd_lab;
 
 ----- # 1 Store dim
 
-----------1.1 create a transient table in the analysis schema to copy the store data from the os db schema. 
 
-DROP TABLE IF EXISTS walmart_anl.store_raw_stg;
-CREATE OR REPLACE TRANSIENT TABLE walmart_anl.store_raw_stg
-AS 
-(SELECT
-	store_key,
-	store_desc AS store_name,
-	NULL AS status_code,
-	NULL AS status_cd_name,
-	NULL AS open_dt,
-	NULL AS close_dt,
-	addr AS addr,
-	city AS city,
-	region AS region,
-	cntry_cd AS cntry_cd,
-	cntry_nm AS cntry_nm,
-	postal_zip_cd AS postal_zip_cd,
-	prov_state_desc AS prov_name ,
-	prov_state_cd AS prov_code,
-	market_key AS market_key,
-	market_name AS market_name,
-    submarket_key AS submarket_key,
-	submarket_name AS submarket_name,
-	latitude AS latitude,
-	longitude AS longitude,
-	TRUE AS tlog_active_flg
-FROM walmart.store)
-;
-
--------1.2  In order to avoid updating by mistake, we create a transient table "store_dim_ver" by copying the store_dim table. The transient table will be updated first. Then we will use this transient table to update the real store_dim table.
-DROP TABLE IF EXISTS walmart_anl.store_dim_ver;
-CREATE TRANSIENT TABLE walmart_anl.store_dim_ver AS SELECT * FROM walmart_anl.store_dim;
-
-
-
-MERGE INTO walmart_anl.store_dim_ver t1
-USING walmart_anl.store_raw_stg t2
+MERGE INTO walmart_anl.store_dim t1
+USING walmart.store t2
 ON  t1.store_key=t2.store_key
-	AND t1.store_name=t2.store_name
+	AND t1.store_name=t2.store_desc
 	AND t1.addr=t2.addr
 	AND t1.city=t2.city
 	AND t1.cntry_cd=t2.cntry_cd
 	AND t1.cntry_nm=t2.cntry_nm
-	AND t1.prov_name=t2.prov_name
-	AND t1.prov_code=t2.prov_code
+	AND t1.prov_name=t2.prov_state_desc
+	AND t1.prov_code=t2.prov_state_cd
 	AND t1.market_key=t2.market_key
 	AND t1.market_name=t2.market_name
     AND t1.submarket_key=t2.submarket_key
@@ -79,15 +44,15 @@ THEN INSERT (
 	end_dt)
 VALUES (
 	t2.store_key,
-	t2.store_name,
+	t2.store_desc,
 	t2.addr,
 	t2.city,
 	t2.region,
 	t2.cntry_cd,
 	t2.cntry_nm,
 	t2.postal_zip_cd,
-	t2.prov_name,
-	t2.prov_code,
+	t2.prov_state_desc,
+	t2.prov_state_cd,
 	t2.market_key,
 	t2.market_name,
 	t2.submarket_key,
@@ -99,22 +64,21 @@ VALUES (
 	NULL
 );
 
-------1.3 In STORE_DIM_VER, label the inactivate rows to be false
 
-MERGE INTO walmart_anl.store_dim_ver t1
-USING walmart_anl.store_raw_stg t2
+MERGE INTO walmart_anl.store_dim t1
+USING walmart.store t2
 ON t1.store_key=t2.store_key
 WHEN MATCHED
     AND (
-	t1.store_name!=t2.store_name
+	t1.store_name!=t2.store_desc
 	OR t1.addr!=t2.addr
 	OR t1.city!=t2.city
 	OR t1.region!=t2.region
 	OR t1.cntry_cd!=t2.cntry_cd
 	OR t1.cntry_nm!=t2.cntry_nm
 	OR t1.postal_zip_cd!=t2.postal_zip_cd
-	OR t1.prov_name!=t2.prov_name
-	OR t1.prov_code!=t2.prov_code
+	OR t1.prov_name!=t2.prov_state_desc
+	OR t1.prov_code!=t2.prov_state_cd
 	OR t1.market_key!=t2.market_key
 	OR t1.market_name!=t2.market_name
     OR t1.submarket_key!=t2.submarket_key
@@ -125,40 +89,12 @@ WHEN MATCHED
 THEN UPDATE SET end_dt = current_date(), tlog_active_flg=FALSE
 ;
 
--------1.4 Update the real STORE_DIM in walmart_anl.
-TRUNCATE TABLE walmart_anl.STORE_DIM;
-INSERT INTO walmart_anl.STORE_DIM SELECT * FROM walmart_anl.STORE_DIM_VER;
-
-
 
 ----- # 2 product dim
 
-----------2.1 create a transient table in the analysis schema to copy the product data from the os db schema. 
-DROP TABLE IF EXISTS walmart_anl.product_raw_stg;
-CREATE OR REPLACE TRANSIENT TABLE walmart_anl.product_raw_stg
-AS 
-(SELECT
-	prod_key,
-	prod_name,
-	vol,
-	wgt,
-	brand_name, 
-	status_code,
-	status_code_name,
-	category_key,
-	category_name,
-	subcategory_key,
-	subcategory_name,
-	TRUE AS tlog_active_flg
-FROM walmart.product)
-;
-----------2.2  In order to avoid updating by mistake, we create a transient table "product_dim_ver" by copying the storproduct_dim table. The transient table will be updated first. Then we will use this transient table to update the real product_dim table.
-DROP TABLE IF EXISTS walmart_anl.product_dim_ver;
-CREATE OR REPLACE TRANSIENT TABLE walmart_anl.product_dim_ver AS SELECT * FROM walmart_anl.product_dim;
 
-
-MERGE INTO walmart_anl.PRODUCT_DIM_VER t1
-USING walmart_anl.PRODUCT_RAW_STG t2
+MERGE INTO walmart_anl.PRODUCT_DIM t1
+USING walmart.PRODUCT t2
 ON  t1.prod_key=t2.prod_key
     AND t1.prod_name=t2.prod_name 
     AND t1.vol=t2.vol 
@@ -202,9 +138,9 @@ VALUES (
     CURRENT_DATE(),
     NULL
 );
-----------2.3 In product_dim_ver, label the inactivate rows to be false
-MERGE INTO walmart_anl.product_dim_ver t1
-USING walmart_anl.product_raw_stg t2
+
+MERGE INTO walmart_anl.product_dim t1
+USING walmart.product t2
 ON t1.prod_key=t2.prod_key
 WHEN MATCHED
     AND (
@@ -221,11 +157,6 @@ WHEN MATCHED
 )
 THEN UPDATE SET end_dt= current_date(), tlog_active_flg=FALSE
 ;
-
--------2.4 Update the real store_dim in walmart_anl.
-TRUNCATE TABLE walmart_anl.product_dim;
-INSERT INTO walmart_anl.product_dim SELECT * FROM walmart_anl.product_dim_ver;
-
 
 
 ----- # 3 calendar dim
@@ -298,6 +229,7 @@ promotion_flg   AS promotion_flg,
 next_delivery_dt   AS next_delivery_dt
 FROM walmart.inventory
 WHERE cal_dt>=NVL($LAST_DATE, '1900-01-01');
+
 
 
 INSERT INTO walmart_anl.sales_inv_store_dy 
