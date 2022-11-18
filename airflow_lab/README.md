@@ -51,7 +51,7 @@ In this step, we use a SnowflakeOperator **t5 = SnowflakeOperator** to run a que
 
 - 1) We first need to create database, schema and table in Snowflake. The table colums should include: orderNumber, order_date, order_amount, big_order. In this demo code, the database, schema, table names are: database=airflow_demo, schema=emr, table=orders.
 - 2) We should Build connection between Airflow and Snowflake and save the connection in to Airflow. In the demo code, the conneciton is **snowflake_conn_id='snowflake_conn'**.
-- 3) We should integrate S3 with Snowflake, to create a S3 Integration Stage. In the demo code the Stage is called "@S3_de_exercise_data_bucket_STAGE". If you don't remember how to create S3 Integration, please go back to Snowflake lecture to check. 
+- 3) We should integrate S3 with Snowflake, to create a S3 Integration Stage. In the demo code the Stage is called "@S3_de_exercise_data_bucket_STAGE". If you don't remember how to create S3 Integration, please go back to Snowflake lecture to check. [This](https://youtu.be/Jmv243OHF_E) is the demo video recorded previously. 
 - 4) We create a series queries to run, to copy the file from S3 to Snowflake table.
 ![2022-11-18 13_39_30-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202778795-f648b64a-c2b6-45b9-8672-749102b7e0f3.jpg)
 
