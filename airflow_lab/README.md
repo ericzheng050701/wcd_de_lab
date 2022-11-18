@@ -47,6 +47,8 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 
 ## Step 4:
 In this step, we use a SnowflakeOperator **t5 = SnowflakeOperator** to run a query to copy the data from S3 to Snowflake table. 
+![2022-11-18 13_40_54-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202779029-05aa83c8-00f2-45c9-b1e9-7e9ff9fad89a.jpg)
+
 - 1) We first need to create database, schema and table in Snowflake. The table colums should include: orderNumber, order_date, order_amount, big_order. In this demo code, the database, schema, table names are: database=airflow_demo, schema=emr, table=orders.
 - 2) We should Build connection between Airflow and Snowflake and save the connection in to Airflow. In the demo code, the conneciton is **snowflake_conn_id='snowflake_conn'**.
 - 3) We should integrate S3 with Snowflake, to create a S3 Integration Stage. In the demo code the Stage is called "@S3_de_exercise_data_bucket_STAGE". If you don't remember how to create S3 Integration, please go back to Snowflake lecture to check. 
