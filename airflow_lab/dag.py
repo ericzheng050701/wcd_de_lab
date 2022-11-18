@@ -34,9 +34,9 @@ SPARK_STEPS = [
 
 ]
 
-CLUSTER_ID = "j-XOWZJMOIEDUE"
-S3_BUCKET = os.environ.get("RDS_INPUT_S3_BUCKET", "de-exercise-data-bucket")
-S3_KEY = os.environ.get("RDS_INPUT_S3_KEY", "input/orders_amount.csv")
+CLUSTER_ID = "j-XOWZJMOIEDUE" ## When you create a EMR cluster, you will get the Cluster_id 
+S3_BUCKET = os.environ.get("RDS_INPUT_S3_BUCKET", "de-exercise-data-bucket") ## the value get from Variable in Airflow
+S3_KEY = os.environ.get("RDS_INPUT_S3_KEY", "input/orders_amount.csv") ## the value get from Variable in Airflow
 
 
 
@@ -51,8 +51,9 @@ default_args={'depends_on_past': False,
              'catchup':False,
              'backfill':False}
 
-sql_orderAmount = """
-                     select o.orderNumber, o.order_date, sum(od.quantityOrdered*od.PriceEach) order_amount 
+## run the query to get the orderNumber, order_date, order_amount  from the RDS
+sql_orderAmount = """ 
+                     select o.orderNumber, o.order_date, sum(od.quantityOrdered*od.PriceEach) order_amount    
                      from classicmodels.orders o
                      left join classicmodels.orderdetails od Using (orderNumber)
                      where o.order_date<=current_date()-1
@@ -61,6 +62,7 @@ sql_orderAmount = """
                      ;
                 """
 
+## run the query to get the value of average order amount from the RDS
 sql_avgOrderAmount = """
                      select avg(order_amount) avg_order_amount 
                      from 
@@ -72,7 +74,7 @@ sql_avgOrderAmount = """
 	                      order by 2 desc) as t;                               
                       """
 
-
+## run the query to copy the file from S3 Output folder to Snowflake table
 copyTABLE = """
             truncate airflow_demo.emr.orders;
             copy into airflow_demo.emr.orders
@@ -81,14 +83,15 @@ copyTABLE = """
             pattern='.*part.*[.]csv';
             """
 
+## run the function with MySqlHook to send the query of sql_avgOrderAmount to RDS to get the 'avg_order_amount' value and save it to XCOM in Airflow.
 def query_mysql(**kwargs):
-    mysql_hook = MySqlHook(mysql_conn_id='mysql_rds_ariflowlab')
+    mysql_hook = MySqlHook(mysql_conn_id='mysql_rds_ariflowlab')    ## connection id of RDS saved in the Airlow Adim -> Connections
     conn = mysql_hook.get_conn()
     cursor = conn.cursor()
     cursor.execute(sql_avgOrderAmount)
     result = cursor.fetchone()
     data = float(result[0])
-    kwargs['ti'].xcom_push(key='avg_order_amount', value=data)
+    kwargs['ti'].xcom_push(key='avg_order_amount', value=data)   ## push the value to XCOM
     
 
 with DAG('b4_air_lab_demo', description = 'airflow-lab-dag-demo', default_args = default_args) as dag:
@@ -97,10 +100,10 @@ with DAG('b4_air_lab_demo', description = 'airflow-lab-dag-demo', default_args =
     t1 = SqlToS3Operator(
         task_id="orderAmount_mysql_to_s3",
         sql_conn_id="mysql_rds_ariflowlab",
-        query=sql_orderAmount,
+        query=sql_orderAmount,    ## run the query we defined in previous code
         s3_bucket=S3_BUCKET,
-        aws_conn_id="aws_conn",
-        s3_key=S3_KEY,
+        aws_conn_id="aws_conn",   ## connection id of AWS saved in the Airlow Adim -> Connections
+        s3_key=S3_KEY,            ## folder name and file name on S3
         replace=True,
 
     )
@@ -110,8 +113,8 @@ with DAG('b4_air_lab_demo', description = 'airflow-lab-dag-demo', default_args =
     t3 = EmrAddStepsOperator(
     task_id = 'add_emr_steps',
     job_flow_id = CLUSTER_ID,
-    aws_conn_id = "aws_conn",
-    steps = SPARK_STEPS
+    aws_conn_id = "aws_conn",  ## connection id of AWS saved in the Airlow Adim -> Connections
+    steps = SPARK_STEPS        ## SPARK_STEPS we defined in previous code
     )
 
     t4 = EmrStepSensor(
