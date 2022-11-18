@@ -26,3 +26,7 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
     
 ![2022-11-18 11_41_38-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202756788-8652f820-24d6-4c33-b8e7-d64ad524e9e7.jpg)
 
+- 2) We create a python function to send the query **sql_avgOrderAmount** to RDS to run. In the function, instead of using operators we use Hook. We use the same RDS conn_id --"mysql_rds_ariflowlab" as **my_conn_id** in **MysqlHook**. Fetch the result and same the result to XCOM key='avg_order_amount' with **kwargs['ti'].xcom_push(key='avg_order_amount', value=data)**. The reason why we save the value in Xcom is because in the next step the EMR will get this value and use it in the pyspark transformation. 
+![2022-11-18 11_39_43-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202757080-4caa9847-d15b-4c44-9b8a-a748a1bc80ab.jpg)
+
+
