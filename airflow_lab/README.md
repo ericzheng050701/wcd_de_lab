@@ -12,14 +12,7 @@ Step 1:
   - 1) We first create a S3 folder to store the result from RDS;
   - 2) We create a connection to RDS and store the connection id into Airflow. In the demo, the conn_id is called "mysql_rds_ariflowlab".
   - 3) We create the below query called "sql_orderAmount", this query is used to feltch the result of [order_number + order_date + order_amount]:
-         sql_orderAmount = """
-                     select o.orderNumber, o.order_date, sum(od.quantityOrdered*od.PriceEach) order_amount 
-                     from classicmodels.orders o
-                     left join classicmodels.orderdetails od Using (orderNumber)
-                     where o.order_date<=current_date()-1
-                     group by 1,2
-                     order by 2 desc
-                     ;
-                """
+      ![2022-11-18 11_14_36-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202750844-14736eb1-8170-4030-b9f9-a646537fc0d2.jpg)
+   
 
 
