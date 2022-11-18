@@ -35,7 +35,8 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 ![2022-11-18 13_04_23-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202774518-80449a22-f924-42ab-8764-adc5a1ce58d7.jpg)
 
 - 3) If you take a look at the pyspark script, the parameters defined in the above step are interpreted in the pyspark code.
-![2022-11-18 13_11_11-wcd_de_lab_pyspark py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202774338-57edb2b8-e367-4da2-aa01-3e1ac9be752c.jpg)
+![2022-11-18 13_14_31-wcd_de_lab_pyspark py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202774706-0697bc62-9e99-4693-89c2-493ec1a42f37.jpg)
+
 
 
 
