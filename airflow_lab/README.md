@@ -22,5 +22,7 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 
 
 ## Step 2: 
-- 1) 
+- 1) We first create a sql query to fetch the data of average order amount from RDS with name **sql_avgOrderAmount**.
+    
+![2022-11-18 11_41_38-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202756788-8652f820-24d6-4c33-b8e7-d64ad524e9e7.jpg)
 
