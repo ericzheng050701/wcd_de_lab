@@ -9,14 +9,14 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 
 
 ## Step 1: 
-  - 1) We first create a S3 folder to store the result from RDS; The bucket and the folder name and the folder and file name should be saved into **Variable** in Airflow.
+  - 1) We first create a S3 folder to store the result from RDS; In this demo, we we defined the file called "orders_amount.csv" and the file is saved into 'input' folder. So the value of **input/orders_amount.csv** is saved in **Variable** if Airflow.
   - 2)  We create a connection to AWS and store the connection id into Airflow. In the demo, the conn_id is called "aws_conn".
   - 3) We create a connection to RDS and store the connection id into Airflow. In the demo, the conn_id is called "mysql_rds_ariflowlab".
   - 4) We create the below query called "sql_orderAmount", this query is used to feltch the result of **order_number + order_date + order_amount**:
       ![2022-11-18 11_14_36-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202750844-14736eb1-8170-4030-b9f9-a646537fc0d2.jpg)
       ![sales_order_amount_final](https://user-images.githubusercontent.com/62180522/202755636-56273c41-b501-4dcd-817d-136e9f29cee0.jpg)
 
-  - 5) Then we run above query with **t1 = SqlToS3Operator**. This is the Operator specifically design for fetching result from databases like mysql, postgres to S3. In the operator, **sql_conn_id** is the connection to RDS which we've just created in step iii, the **aws_conn_id** is the connection to AWS which we've just created in step ii. **query** is the query "sql_orderAmount" we create in step iiii. **s3_key** is the folder name in S3. We stored this S3 Key in Airflow **Variable** in step i.
+  - 5) Then we run above query with **t1 = SqlToS3Operator**. This is the Operator specifically design for fetching result from databases like mysql, postgres to S3. In the operator, **sql_conn_id** is the connection to RDS which we've just created in step iii, the **aws_conn_id** is the connection to AWS which we've just created in step ii. **query** is the query "sql_orderAmount" we create in step iiii. The we save the file into S3 folder with name == **s3_key**. In this demo, we we defined the file called "orders_amount.csv" and the file is saved into 'input' folder. So the value of "input/orders_amount.csv" is saved in **Variable** if Airflow in Step i.
   
 ![2022-11-18 11_21_07-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202752633-14d1c3fd-a5c8-4fae-8843-6d88c0101d35.jpg)
 
@@ -29,4 +29,6 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 - 2) We create a python function to send the query **sql_avgOrderAmount** to RDS to run. In the function, instead of using operators we use Hook. We use the same RDS conn_id --"mysql_rds_ariflowlab" as **my_conn_id** in **MysqlHook**. Fetch the result and same the result to XCOM key='avg_order_amount' with **kwargs['ti'].xcom_push(key='avg_order_amount', value=data)**. The reason why we save the value in Xcom is because in the next step the EMR will get this value and use it in the pyspark transformation. 
 ![2022-11-18 11_39_43-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202757080-4caa9847-d15b-4c44-9b8a-a748a1bc80ab.jpg)
 
-
+## Step 3:
+- 1) When the files "input/orders_amount.csv" and value of "avg_order_amount" are ready, we will start to run EMR, with Operator **t3 = EmrAddStepsOperator** and **EmrStepSensor**. 
+- 2) **t3 = EmrAddStepsOperator** is the Operator to add the **Steps** into EMR.
