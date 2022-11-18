@@ -43,6 +43,18 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 - 5) **t4 = EmrStepSensor** this step is the real step to run EMR. In this step, you need to input the EMR Cluser_id which you created initially. and also we also need to connect AWS with **aws_conn_id** which you define in the first Step.  You can write the **step_id** just like this **step_id = "{{ task_instance.xcom_pull('add_emr_steps', key='return_value')[0] }}"** this means you need to fetch the STEP ID from the task_id= 'add_emr_steps' which is defined in our last step. 
 ![2022-11-18 13_16_58-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202775022-8660a40d-7005-465e-964c-f0a8486ac460.jpg)
 
+- 6) After running the EMR, the transformed file was saved to your S3 folder for Output data. 
+
+## Step 4:
+In this step, we use a SnowflakeOperator **t5 = SnowflakeOperator** to run a query to copy the data from S3 to Snowflake table. 
+- 1) We first need to create database, schema and table in Snowflake. The table colums should include: orderNumber, order_date, order_amount, big_order. In this demo code, the database, schema, table names are: database=airflow_demo, schema=emr, table=orders.
+- 2) We should Build connection between Airflow and Snowflake and save the connection in to Airflow. In the demo code, the conneciton is **snowflake_conn_id='snowflake_conn'**.
+- 3) We should integrate S3 with Snowflake, to create a S3 Integration Stage. In the demo code the Stage is called "@S3_de_exercise_data_bucket_STAGE". If you don't remember how to create S3 Integration, please go back to Snowflake lecture to check. 
+- 4) We create a series queries to run, to copy the file from S3 to Snowflake table.
+![2022-11-18 13_39_30-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202778795-f648b64a-c2b6-45b9-8672-749102b7e0f3.jpg)
+
+
+
 
 
 
