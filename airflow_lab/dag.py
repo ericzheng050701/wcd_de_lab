@@ -23,11 +23,11 @@ SPARK_STEPS = [
                 'spark-submit',
                 '--deploy-mode', 'cluster',
                 '--master', 'yarn',
-                's3://de-exercise-data-bucket/scripts/airflow_lab_pyspark.py',
+                's3://de-exercise-data-bucket/scripts/airflow_lab_pyspark.py', ## the S3 folder store the pyspark script.
                 '--spark_name', 'airflow_lab',
-                '--input_file_url', 's3://de-exercise-data-bucket/input/orders_amount.csv',
-                '--output_file_url', 's3://de-exercise-data-bucket/output/orders_amount_output',
-                '--avg_order_amount', "{{ task_instance.xcom_pull('get_avg_order_amount', key='avg_order_amount') }}"
+                '--input_file_url', 's3://de-exercise-data-bucket/input/orders_amount.csv',  ## the S3 folder get the file from RDS and input file to EMR
+                '--output_file_url', 's3://de-exercise-data-bucket/output/orders_amount_output', ## the S3 folder get the file from EMR.
+                '--avg_order_amount', "{{ task_instance.xcom_pull('get_avg_order_amount', key='avg_order_amount') }}" ## the value of avg_order_amount.
             ]
         }
     }
