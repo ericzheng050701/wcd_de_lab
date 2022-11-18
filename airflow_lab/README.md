@@ -31,4 +31,10 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 
 ## Step 3:
 - 1) When the files "input/orders_amount.csv" and value of "avg_order_amount" are ready, we will start to run EMR, with Operator **t3 = EmrAddStepsOperator** and **EmrStepSensor**. 
-- 2) **t3 = EmrAddStepsOperator** is the Operator to add the **Steps** into EMR.
+- 2) **t3 = EmrAddStepsOperator** is the Operator to add the **Steps** into EMR. We first need to define all the parameters defined for the **Steps**. This steps will be used in the EMR. In the code, you need to fill in your own '--input_file_url', '--output_file_url', and the '-avg_order_amount' is the value we create in the STEP 2 and saved in the **Variable** of Airflow.
+![2022-11-18 13_04_23-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202773057-449a3782-7cb8-4666-bca4-98c75a186567.jpg)
+- 3) If you take a look at the pyspark script, the parameters defined in the above step are interpreted in the pyspark code.
+![2022-11-18 13_11_11-wcd_de_lab_pyspark py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202774338-57edb2b8-e367-4da2-aa01-3e1ac9be752c.jpg)
+
+
+
