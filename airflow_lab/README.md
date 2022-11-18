@@ -37,6 +37,9 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
 - 3) If you take a look at the pyspark script, the parameters defined in the above step are interpreted in the pyspark code.
 ![2022-11-18 13_14_31-wcd_de_lab_pyspark py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202774706-0697bc62-9e99-4693-89c2-493ec1a42f37.jpg)
 
+-4) **t4 = EmrStepSensor** this step is the real step to run EMR. In this step, you need to input the EMR Cluser_id which you created previously. and also we also need to connect AWS with **aws_conn_id** which you define in the first Step.  You can write the **step_id** just like this **step_id = "{{ task_instance.xcom_pull('add_emr_steps', key='return_value')[0] }}"** this means you need to fetch the STEP ID from the dag_id= 'add_emr_steps' which is defined in our last step. 
+![2022-11-18 13_16_58-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202775022-8660a40d-7005-465e-964c-f0a8486ac460.jpg)
+
 
 
 
