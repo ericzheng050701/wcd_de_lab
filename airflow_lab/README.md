@@ -1,2 +1,25 @@
 ![airflow_lab_diagram](https://user-images.githubusercontent.com/62180522/202745575-a43c6e52-f818-40a8-90a5-aeb58ec3cb83.png)
 
+The project including several steps:
+Step 1. Save query result from RDS to a S3 folder.
+Step 2. Save the query result of average order amount to Airflow XCOM.
+Step 3. Fetch the file from S3 and value of average order amount from Airflow XCOM, and tranform in EMR and save the result to a new S3 folder. 
+Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, then we use Copy Command in Snowflake to copy the file into Snowflake.
+
+
+Details:
+Step 1: 
+  - 1) We first create a S3 folder to store the result from RDS;
+  - 2) We create a connection to RDS and store the connection id into Airflow. In the demo, the conn_id is called "mysql_rds_ariflowlab".
+  - 3) We create the below query called "sql_orderAmount", this query is used to feltch the result of [order_number + order_date + order_amount]:
+         sql_orderAmount = """
+                     select o.orderNumber, o.order_date, sum(od.quantityOrdered*od.PriceEach) order_amount 
+                     from classicmodels.orders o
+                     left join classicmodels.orderdetails od Using (orderNumber)
+                     where o.order_date<=current_date()-1
+                     group by 1,2
+                     order by 2 desc
+                     ;
+                """
+
+
