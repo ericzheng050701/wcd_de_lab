@@ -14,9 +14,13 @@ Step 4. the new S3 folder should Integrate with Snowflake by S3_Integration, the
   - 3) We create a connection to RDS and store the connection id into Airflow. In the demo, the conn_id is called "mysql_rds_ariflowlab".
   - 4) We create the below query called "sql_orderAmount", this query is used to feltch the result of **order_number + order_date + order_amount**:
       ![2022-11-18 11_14_36-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202750844-14736eb1-8170-4030-b9f9-a646537fc0d2.jpg)
+      ![sales_order_amount_final](https://user-images.githubusercontent.com/62180522/202755636-56273c41-b501-4dcd-817d-136e9f29cee0.jpg)
+
   - 5) Then we run above query with **t1 = SqlToS3Operator**. This is the Operator specifically design for fetching result from databases like mysql, postgres to S3. In the operator, **sql_conn_id** is the connection to RDS which we've just created in step iii, the **aws_conn_id** is the connection to AWS which we've just created in step ii. **query** is the query "sql_orderAmount" we create in step iiii. **s3_key** is the folder name in S3. We stored this S3 Key in Airflow **Variable** in step i.
   
 ![2022-11-18 11_21_07-wcd_de_lab_dag py at master · ericzheng050701_wcd_de_lab](https://user-images.githubusercontent.com/62180522/202752633-14d1c3fd-a5c8-4fae-8843-6d88c0101d35.jpg)
 
 
+## Step 2: 
+- 1) 
 
