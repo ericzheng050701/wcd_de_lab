@@ -56,4 +56,6 @@ The file jobs2.csv should be uploaded into the storage container.
 
 Don't forget to turn off your VM. 
 
+**This python script is a draft python script, if you have more time, please use a standard way (with config file) to finish the project. **
+
 
