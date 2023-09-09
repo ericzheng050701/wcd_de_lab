@@ -12,7 +12,7 @@ bash install-AzCopy.sh
 ```
 Test azcopy by typing `azcopy` to see if the command exists.
 
-### Step 4. Test the azcopy command by the following commands:
+## Step 4. Test the azcopy command by the following commands:
 ```
 touch file1.txt
 ```
@@ -21,7 +21,7 @@ azcopy copy "file1.txt" "<your access token>"  --recursive=true
 ```
 Go to check your storage container to see if the file has been uploaded into the container.
 
-### Step 5. In VM, set a virtual environment:
+## Step 5. In VM, set a virtual environment:
 ```
 sudo apt-get install software-properties-common
 ```
@@ -42,12 +42,12 @@ source sandbox/bin/activate
 ```
 You will create a virtual enviroment and activated it.
 
-### Step 6. Install the requirements file, here we use a file called `az_vm_requirements.txt` with command:
+## Step 6. Install the requirements file, here we use a file called `az_vm_requirements.txt` with command:
 ```
 pip install -r az_vm_requirements.txt
 ```
 
-### Step 7. Now let's run the `main.py` file:
+## Step 7. Now let's run the `main.py` file:
 ```
 python3 main.py
 ```
