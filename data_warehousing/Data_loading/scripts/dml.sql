@@ -301,9 +301,9 @@ SELECT
 	sum(sales_mgrn) as wk_sales_mgrn,
 	sum(case when c.day_of_wk_num=6 then s.stock_on_hand_qty else 0 end) as eop_stock_on_hand_qty,
 	sum(case when c.day_of_wk_num=6 then s.ordered_stock_qty else 0 end) as eop_ordered_stock_qty,
-	count(case when s.out_of_stock_flg=true then 1 else 0 end) as out_of_stock_times,
-	count(case when s.in_stock_flg=true then 1 else 0 end) as in_stock_times,
-	count(case when s.low_stock_flg=true then 1 else 0 end) as low_stock_times
+	sum(case when s.out_of_stock_flg=true then 1 else 0 end) as out_of_stock_times,
+	sum(case when s.in_stock_flg=true then 1 else 0 end) as in_stock_times,
+	sum(case when s.low_stock_flg=true then 1 else 0 end) as low_stock_times
 FROM walmart_anl.sales_inv_store_dy s
 JOIN walmart_anl.calendar_dim c USING (cal_dt)
 GROUP BY 1,2,3,4
