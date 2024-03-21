@@ -48,7 +48,6 @@ INSERT INTO sakila_anl.staff_dim (
 	picture,
 	email,
 	username,
-	password,
 	district,
 	city_name,
 	postal_code,
@@ -64,7 +63,6 @@ SELECT
 	s.picture,
 	s.email,
 	s.username,
-	s.password,
 	a.district,
 	ct.city AS city_name,
 	a.postal_code,
@@ -142,7 +140,7 @@ SELECT
     c.NAME AS category_name
 FROM sakila.film f
 LEFT JOIN sakila.LANGUAGE l USING (language_id)
-LEFT JOIN sakila.LANGUAGE ll USING (language_id)
+LEFT JOIN sakila.LANGUAGE ll ON f.original_language_id=ll.language_id
 LEFT JOIN sakila.film_actor fa USING (film_id)
 LEFT JOIN sakila.actor a ON fa.actor_id=a.actor_id
 LEFT JOIN sakila.film_category fc USING (film_id)
@@ -174,6 +172,7 @@ JOIN sakila.inventory i ON r.inventory_id = i.inventory_id;
 
 ----- find the latest date of the transaction
 SET max_dt = (SELECT max(payment_date) FROM sakila.payment);
+SET min_dt = (SELECT min(payment_date) FROM sakila.payment);
 
 
 ----- get the latest 4 weeks number and date range to create a transient table
@@ -186,10 +185,10 @@ JOIN
 		(SELECT 
 			yr_wk_num
 		FROM sakila_anl.calendar_dim
-		WHERE cal_dt <=$max_dt
+		WHERE cal_dt <=$max_dt AND cal_dt >= $min_dt
 		GROUP BY yr_wk_num
-		ORDER BY yr_wk_num desc
-		LIMIT 4) USING (yr_wk_num)
+		ORDER BY yr_wk_num desc) USING (yr_wk_num)
+WHERE c.cal_dt <= $max_dt AND cal_dt >= $min_dt
 ;
 
 ----build a week + store framework. The reason why we cross join week and store, is because we want to create a framework to make sure the all weeks and stores
@@ -212,39 +211,47 @@ SELECT
 	nvl(sum(t.amount),0) AS wk_amount
 FROM 
 sakila_anl.last_4_wk_store_stg w 
-LEFT JOIN sakila_anl.trans_base_stg T  ON T.trans_dt=w.cal_dt
+LEFT JOIN sakila_anl.trans_base_stg T  ON T.trans_dt=w.cal_dt AND T.store_id = w.store_id
 GROUP BY 1,2
 ORDER BY 1,2;
 
 
 ----------- find out if the late week amount less than that in previous week
 ------------in the subquery there are several steps:
- ------------- 1)  based on the "last_4_wk_trans_stg" table create a new column 'the last wk_amount' 
-------------- 2)   make the wk amount minus last wk amount, if negtive then we label it as -1, this will be a new table called 'wk_decline'
-------------- 3)  sum total 'wk_decline' of a store, if it is -3, it means last 3 weeks all less than the later week, this means totally 4 weeks decline, so we can label
------------------ the is_decline column true.
+ ------------- 1)  based on the "last_4_wk_trans_stg" table create a three new columns which looks for weekly sales amounts for last 3 weeks.
+------------- 2)   Using comparison, determine if there was any time when sales went down for straight three weeks. If that is true, then set is_decline to TRUE.
 
 CREATE OR REPLACE TRANSIENT TABLE sakila_anl.last_4_wk_decline AS 
 SELECT 
 		store_id,
-		CASE WHEN sum_decline=-3 THEN TRUE ELSE FALSE END AS is_decline 
+		yr_wk_num,
+		is_decline 
 FROM 
-           (select  store_id, sum(wk_decline) as sum_decline
-		    from  
-		             (SELECT *, CASE WHEN wk_amount - last_wk_amount<=0 THEN -1 ELSE 0 END AS wk_decline
-				       FROM  
-				        		(select  *, lead(wk_amount) over (partition by store_id order by yr_wk_num) as last_wk_amount 
-				        		 from sakila_anl.last_4_wk_trans_stg)
-				       WHERE last_wk_amount IS NOT NULL)
-		  group by 1)
+		(SELECT 
+         	*, 
+         	CASE WHEN 
+         		(wk_amount < last_wk_amount) AND
+         		(last_wk_amount < two_wk_ago_amount) AND 
+         		(two_wk_ago_amount < three_wk_ago_amount)
+         	THEN TRUE ELSE FALSE END AS is_decline
+	       FROM  
+	        		(select  
+	        			*, 
+	        			lag(wk_amount) over (partition by store_id order by yr_wk_num) as last_wk_amount,
+	        			lag(wk_amount,2) over (partition by store_id order by yr_wk_num) as two_wk_ago_amount,
+	        			lag(wk_amount,3) over (partition by store_id order by yr_wk_num) as three_wk_ago_amount
+	        		 from sakila_anl.last_4_wk_trans_stg)
+		WHERE last_wk_amount IS NOT NULL)
 ;
 
 ------- finally we join this column with the sakila_anl.trans_base_stg table, to create the final transcaction transient table.
 CREATE OR REPLACE TRANSIENT TABLE sakila_anl.transaction_stg AS 
-SELECT T.*,
-			  w.is_decline
-FROM sakila_anl.trans_base_stg t
-JOIN sakila_anl.last_4_wk_decline w USING (store_id);
+SELECT 
+	T.*,
+	w.is_decline
+FROM sakila_anl.trans_base_stg T
+JOIN sakila_anl.last_4_wk_store_stg s ON T.store_id = s.store_id AND T.trans_dt = s.cal_dt
+JOIN sakila_anl.last_4_wk_decline w ON T.store_id=w.store_id AND s.yr_wk_num=w.yr_wk_num;
 
 --------- replace the current transaction table with new transaction transient table
 TRUNCATE TABLE IF EXISTS sakila_anl.transaction;
