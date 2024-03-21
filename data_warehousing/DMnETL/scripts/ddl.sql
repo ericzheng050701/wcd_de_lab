@@ -4,7 +4,7 @@ CREATE SCHEMA IF NOT EXISTS sakila_anl;
 
 
 CREATE OR REPLACE TABLE sakila_anl.customer_dim (
-customer_id	int,
+customer_id	int PRIMARY KEY,
 first_name	varchar(45),
 last_name	varchar(45),
 email	varchar(500),
@@ -19,7 +19,7 @@ coutry_name	varchar(50),
 active	boolean);
 
 CREATE OR REPLACE TABLE sakila_anl.staff_dim (
-staff_id	int,
+staff_id	int PRIMARY KEY,
 first_name	varchar(45),
 last_name	varchar(45),
 address	varchar(500),
@@ -36,7 +36,7 @@ country_name	varchar(50),
 active	boolean);
 
 CREATE OR REPLACE TABLE sakila_anl.store_dim (
-store_id	int,
+store_id	int PRIMARY KEY,
 manager_firstname	varchar(45),
 manager_lastname	varchar(45),
 address	varchar(500),
@@ -48,7 +48,7 @@ phone	varchar(20),
 country_name	varchar(50));
 
 CREATE OR REPLACE TABLE sakila_anl.film_dim (
-film_id	int,
+film_id	int PRIMARY KEY,
 title	varchar(500),
 description	 TEXT,
 released_year	int,
@@ -65,7 +65,7 @@ actor_last_name	varchar(45),
 category_name	varchar(45));
 
 CREATE OR REPLACE TABLE sakila_anl.calendar_dim (
-cal_dt	date,
+cal_dt	date PRIMARY KEY,
 day_of_wk_num	 int,
 day_of_wk_desc	varchar(30),
 yr_num	integer,
@@ -75,10 +75,10 @@ mnth_num	integer,
 yr_mnth_num	integer);
 
 CREATE OR REPLACE TABLE sakila_anl.TRANSACTION (
-trans_dt	date,
-customer_id	int,
-staff_id	int,
-store_id	int,
-film_id	int,
+trans_dt	date REFERENCES sakila_anl.calendar_dim(cal_dt),
+customer_id	int REFERENCES sakila_anl.customer_dim(customer_id),
+staff_id	int REFERENCES sakila_anl.staff_dim(staff_id),
+store_id	int REFERENCES sakila_anl.store_dim(store_id),
+film_id	int REFERENCES sakila_anl.film_dim(film_id),
 amount	NUMERIC,
 is_decline	boolean);
